@@ -70,6 +70,35 @@ flowchart LR
 
 阶段 0 只完成定位与设计文档。阶段 1 开始搭建 FastAPI、PostgreSQL、SQLAlchemy、Alembic 和健康检查。
 
+## 本地运行最小后端
+
+当前阶段先跑通 FastAPI 最小服务和健康检查接口。
+
+在 WSL Ubuntu-24.04 中进入项目并启用虚拟环境：
+
+```bash
+cd /mnt/d/wms_agv
+source .venv/bin/activate
+```
+
+安装依赖：
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+启动服务：
+
+```bash
+python -m uvicorn app.main:app --reload
+```
+
+当前健康检查接口：
+
+```text
+GET /api/Health
+```
+
 ## 文档入口
 
 - [项目故事与边界](docs/01_project_story.md)
@@ -85,4 +114,6 @@ flowchart LR
 
 阶段 0 验收标准：别人不用看之前的聊天，也能从 README 和 docs 理解这个项目要解决什么问题、有哪些业务角色、主流程怎么走、核心对象和状态有哪些。
 
-下一步进入阶段 1：搭建 FastAPI 后端骨架、PostgreSQL、SQLAlchemy、Alembic、Docker Compose 和健康检查接口。
+阶段 1-1 已开始：已创建 FastAPI 后端入口和 `requirements.txt`，健康检查接口已经可以返回 `status is ok`。
+
+下一步继续收尾阶段 1-1：统一健康检查接口命名和响应格式，补一个最小自动化测试，然后再进入数据库与业务表设计。

@@ -148,17 +148,28 @@ pip --version
 
 阶段 1-1 的目标是先搭建 FastAPI 后端骨架，并提供 `/health` 健康检查接口。
 
-在已经启用 `.venv` 的前提下安装基础依赖：
+当前依赖写在项目根目录的 `requirements.txt` 中。在已经启用 `.venv` 的前提下安装基础依赖：
 
 ```bash
-pip install fastapi uvicorn[standard] pydantic
+python -m pip install -r requirements.txt
 ```
 
-后续会把依赖写入：
+当前 `requirements.txt` 先保持最小：
 
 ```text
-requirements.txt
+fastapi[standard]
 ```
+
+注意：`requirements.txt` 中不要给 `fastapi[standard]` 加引号；只有在命令行里直接安装单个包时才需要根据 shell 情况加引号。
+
+如果在 Ubuntu 中看到 `externally-managed-environment`，说明命令打到了系统 Python，而不是项目 `.venv`。先执行：
+
+```bash
+cd /mnt/d/wms_agv
+source .venv/bin/activate
+```
+
+再用 `python -m pip install -r requirements.txt` 安装。
 
 ## PyCharm 配置
 
@@ -255,3 +266,17 @@ docker compose version
 运行 uvicorn
 用浏览器或 curl 验证服务可用
 ```
+
+当前最小后端启动命令：
+
+```bash
+python -m uvicorn app.main:app --reload
+```
+
+当前健康检查接口：
+
+```text
+GET /api/Health
+```
+
+浏览器或接口工具能看到 `status is ok`，说明 FastAPI 服务已经跑通。

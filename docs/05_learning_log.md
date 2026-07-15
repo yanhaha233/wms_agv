@@ -15,3 +15,12 @@
 - 练习重点：区分 Windows Python、WSL Python 和 Docker 容器环境，选择更接近后续运行环境的开发方式。
 - 当前成果：新增开发环境部署记录，明确使用 PyCharm 写代码、WSL Python 跑后端、Docker 跑外部服务。
 - 下一步：开始阶段 1-1，创建 FastAPI 后端骨架和 `/health` 健康检查接口。
+
+## 2026-07-15
+
+- 阶段：阶段 1-1，FastAPI 最小后端骨架。
+- 本次切片：创建 `app/main.py` 和 `requirements.txt`，让项目第一次作为后端服务运行起来。
+- 练习重点：理解 `requirements.txt` 是依赖清单，`.venv` 是项目自己的 Python 环境，FastAPI 负责把 Python 函数暴露成 HTTP 接口。
+- 当前成果：`requirements.txt` 使用 `fastapi[standard]`；FastAPI 服务可以启动；当前健康检查接口可以返回 `status is ok`。
+- 待改进：统一接口路径大小写，例如后续固定为 `/health` 或 `/api/health`；把响应整理成稳定 JSON 结构，例如 `{"status": "ok"}`；补一个自动化测试验证健康检查接口。
+- 下一步：完成阶段 1-1 收尾，再进入阶段 1-2 的基础数据库连接和第一批核心表设计。
