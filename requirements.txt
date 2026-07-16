@@ -1,3 +1,6 @@
 fastapi[standard]
 pytest
 pydantic-settings
+sqlalchemy
+psycopg[binary]
+alembic
