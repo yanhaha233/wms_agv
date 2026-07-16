@@ -24,3 +24,11 @@
 - 当前成果：`requirements.txt` 使用 `fastapi[standard]`；FastAPI 服务可以启动；当前健康检查接口可以返回 `status is ok`。
 - 待改进：统一接口路径大小写，例如后续固定为 `/health` 或 `/api/health`；把响应整理成稳定 JSON 结构，例如 `{"status": "ok"}`；补一个自动化测试验证健康检查接口。
 - 下一步：完成阶段 1-1 收尾，再进入阶段 1-2 的基础数据库连接和第一批核心表设计。
+
+## 2026-07-16
+
+- 阶段：阶段 1-1 收尾，开发环境统一。
+- 本次切片：删除 Windows 侧 `.venv`，项目后续统一使用 WSL Ubuntu 中的 Python 3.14 和 `.venv-wsl`。
+- 练习重点：区分系统 Python、项目 Python 和虚拟环境；不要替换 Ubuntu 自带的 `python3`，项目中显式使用 `python3.14` 创建虚拟环境。
+- 当前成果：`.gitignore` 忽略 `.venv-wsl/`；开发环境文档记录 Python 3.14 安装、虚拟环境创建、PyCharm Interpreter 路径和 `/health` 健康检查接口。
+- 下一步：提交环境文档更新，然后进入阶段 1-2：PostgreSQL、SQLAlchemy、Alembic 和数据库连接骨架。

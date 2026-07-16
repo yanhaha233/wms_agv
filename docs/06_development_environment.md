@@ -42,7 +42,9 @@ D:\wms_agv
 - Docker Compose 可以正常响应。
 - WSL 默认发行版已切换到 Ubuntu-24.04。
 - Ubuntu-24.04 版本为 Ubuntu 24.04 LTS。
-- Ubuntu 中 Python 版本为 Python 3.12.3。
+- Ubuntu 系统自带 Python 版本为 Python 3.12.3。
+- 项目开发 Python 版本统一使用 Python 3.14。
+- Windows 侧 `.venv` 已删除，后续不再使用 Windows 虚拟环境运行本项目。
 
 如果需要再次检查 WSL 发行版：
 
@@ -79,6 +81,32 @@ sudo apt install -y python3-pip python3-venv git curl
 ```bash
 python3 --version
 python3 -m pip --version
+```
+
+## 安装 Python 3.14
+
+本项目后续在 WSL Ubuntu 中使用 Python 3.14。不要替换 Ubuntu 系统自带的 `python3`，只安装并显式调用 `python3.14`。
+
+安装 deadsnakes PPA 并安装 Python 3.14：
+
+```bash
+sudo apt update
+sudo apt install -y software-properties-common
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install -y python3.14 python3.14-venv python3.14-dev
+```
+
+检查版本：
+
+```bash
+python3.14 --version
+```
+
+不要执行类似下面的命令：
+
+```bash
+sudo ln -sf /usr/bin/python3.14 /usr/bin/python3
 ```
 
 ## Docker Desktop WSL 集成
@@ -122,19 +150,19 @@ cd /mnt/d/wms_agv
 创建项目虚拟环境：
 
 ```bash
-python3 -m venv .venv
+python3.14 -m venv .venv-wsl
 ```
 
 启用虚拟环境：
 
 ```bash
-source .venv/bin/activate
+source .venv-wsl/bin/activate
 ```
 
 启用成功后，命令行前面会出现：
 
 ```text
-(.venv)
+(.venv-wsl)
 ```
 
 检查虚拟环境中的 Python 和 pip：
@@ -148,9 +176,10 @@ pip --version
 
 阶段 1-1 的目标是先搭建 FastAPI 后端骨架，并提供 `/health` 健康检查接口。
 
-当前依赖写在项目根目录的 `requirements.txt` 中。在已经启用 `.venv` 的前提下安装基础依赖：
+当前依赖写在项目根目录的 `requirements.txt` 中。在已经启用 `.venv-wsl` 的前提下安装基础依赖：
 
 ```bash
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
@@ -158,15 +187,16 @@ python -m pip install -r requirements.txt
 
 ```text
 fastapi[standard]
+pytest
 ```
 
 注意：`requirements.txt` 中不要给 `fastapi[standard]` 加引号；只有在命令行里直接安装单个包时才需要根据 shell 情况加引号。
 
-如果在 Ubuntu 中看到 `externally-managed-environment`，说明命令打到了系统 Python，而不是项目 `.venv`。先执行：
+如果在 Ubuntu 中看到 `externally-managed-environment`，说明命令打到了系统 Python，而不是项目 `.venv-wsl`。先执行：
 
 ```bash
 cd /mnt/d/wms_agv
-source .venv/bin/activate
+source .venv-wsl/bin/activate
 ```
 
 再用 `python -m pip install -r requirements.txt` 安装。
@@ -183,7 +213,7 @@ Python Interpreter 建议配置为 WSL 里的项目虚拟环境：
 
 ```text
 WSL: Ubuntu-24.04
-/mnt/d/wms_agv/.venv/bin/python
+/mnt/d/wms_agv/.venv-wsl/bin/python
 ```
 
 推荐设置路径：
@@ -197,7 +227,7 @@ Settings -> Project: wms_agv -> Python Interpreter -> Add Interpreter -> On WSL
 ```text
 Ubuntu-24.04
 Existing environment
-/mnt/d/wms_agv/.venv/bin/python
+/mnt/d/wms_agv/.venv-wsl/bin/python
 ```
 
 ## PyCharm 终端配置
@@ -218,7 +248,7 @@ wsl.exe -d Ubuntu-24.04
 
 ```bash
 cd /mnt/d/wms_agv
-source .venv/bin/activate
+source .venv-wsl/bin/activate
 ```
 
 ## 常见提示
@@ -235,7 +265,7 @@ wsl: 检测到 localhost 代理配置，但未镜像到 WSL。NAT 模式下的 W
 
 ### Windows Python 和 WSL Python
 
-Windows 本地可以有 Python，PyCharm 也可以使用 Windows `.venv`。但本项目推荐使用 WSL 中的 `.venv`，因为后续 Docker 容器、PostgreSQL、Linux 路径和脚本命令都会更接近 WSL 环境。
+Windows 本地可以有 Python，PyCharm 也可以使用 Windows 虚拟环境。但本项目固定使用 WSL 中的 `.venv-wsl`，因为后续 Docker 容器、PostgreSQL、Linux 路径和脚本命令都会更接近 WSL 环境。
 
 推荐原则：
 
@@ -251,7 +281,7 @@ Docker 跑外部服务
 
 ```bash
 cd /mnt/d/wms_agv
-source .venv/bin/activate
+source .venv-wsl/bin/activate
 python --version
 pip --version
 docker --version
@@ -276,7 +306,7 @@ python -m uvicorn app.main:app --reload
 当前健康检查接口：
 
 ```text
-GET /api/Health
+GET /health
 ```
 
-浏览器或接口工具能看到 `status is ok`，说明 FastAPI 服务已经跑通。
+浏览器或接口工具能看到 `{"status": "ok"}`，说明 FastAPI 服务已经跑通。
