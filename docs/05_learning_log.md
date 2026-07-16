@@ -21,14 +21,21 @@
 - 阶段：阶段 1-1，FastAPI 最小后端骨架。
 - 本次切片：创建 `app/main.py` 和 `requirements.txt`，让项目第一次作为后端服务运行起来。
 - 练习重点：理解 `requirements.txt` 是依赖清单，`.venv` 是项目自己的 Python 环境，FastAPI 负责把 Python 函数暴露成 HTTP 接口。
-- 当前成果：`requirements.txt` 使用 `fastapi[standard]`；FastAPI 服务可以启动；当前健康检查接口可以返回 `status is ok`。
-- 待改进：统一接口路径大小写，例如后续固定为 `/health` 或 `/api/health`；把响应整理成稳定 JSON 结构，例如 `{"status": "ok"}`；补一个自动化测试验证健康检查接口。
-- 下一步：完成阶段 1-1 收尾，再进入阶段 1-2 的基础数据库连接和第一批核心表设计。
+- 当前成果：`requirements.txt` 使用 `fastapi[standard]` 和 `pytest`；FastAPI 服务可以启动；健康检查接口统一为 `GET /health`，响应为 `{"status": "ok"}`；已补最小自动化测试。
+- 下一步：进入阶段 1-2，先搭建 PostgreSQL、SQLAlchemy、Alembic 和数据库连接骨架。
 
 ## 2026-07-16
 
 - 阶段：阶段 1-1 收尾，开发环境统一。
 - 本次切片：删除 Windows 侧 `.venv`，项目后续统一使用 WSL Ubuntu 中的 Python 3.14 和 `.venv-wsl`。
 - 练习重点：区分系统 Python、项目 Python 和虚拟环境；不要替换 Ubuntu 自带的 `python3`，项目中显式使用 `python3.14` 创建虚拟环境。
-- 当前成果：`.gitignore` 忽略 `.venv-wsl/`；开发环境文档记录 Python 3.14 安装、虚拟环境创建、PyCharm Interpreter 路径和 `/health` 健康检查接口。
-- 下一步：提交环境文档更新，然后进入阶段 1-2：PostgreSQL、SQLAlchemy、Alembic 和数据库连接骨架。
+- 当前成果：`.gitignore` 忽略 `.venv-wsl/`；开发环境文档记录 Python 3.14 安装、虚拟环境创建、PyCharm Interpreter 路径和 `/health` 健康检查接口；WSL 中浏览器和 curl 均可访问健康检查接口。
+- 下一步：进入阶段 1-2，先完成数据库基础设施，不急着创建物料、库位、库存等业务表。
+
+## 2026-07-16 阶段 1-2 准备
+
+- 阶段：阶段 1-2，数据库连接骨架。
+- 本次切片：明确阶段 1-2 的目标不是写业务表，而是打通 PostgreSQL、SQLAlchemy、Alembic 和配置读取链路。
+- 练习重点：理解数据库服务、连接字符串、ORM engine/session、迁移工具和环境变量之间的关系。
+- 计划成果：新增 PostgreSQL Docker Compose、`.env.example`、数据库配置模块、SQLAlchemy Base/session、Alembic 初始化文件。
+- 验收标准：PostgreSQL 可以启动；应用可以读取 `DATABASE_URL`；Alembic 可以执行一次空迁移；`pytest -q` 仍然通过。

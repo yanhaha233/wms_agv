@@ -310,3 +310,34 @@ GET /health
 ```
 
 浏览器或接口工具能看到 `{"status": "ok"}`，说明 FastAPI 服务已经跑通。
+
+## 阶段 1-2 数据库骨架检查
+
+阶段 1-2 开始引入 PostgreSQL、SQLAlchemy 和 Alembic。这个阶段的重点是数据库基础设施，不急着创建业务表。
+
+准备开发前仍然先进入 WSL 并启用虚拟环境：
+
+```bash
+cd /mnt/d/wms_agv
+source .venv-wsl/bin/activate
+```
+
+阶段 1-2 完成后，应该能执行：
+
+```bash
+python --version
+python -m pip install -r requirements.txt
+docker compose up -d
+docker compose ps
+alembic upgrade head
+pytest -q
+```
+
+预期结果：
+
+- Python 使用项目 `.venv-wsl`。
+- PostgreSQL 容器可以启动。
+- Alembic 可以连接数据库并执行迁移。
+- 健康检查测试继续通过。
+
+如果 `docker compose up -d` 失败，优先检查 Docker Desktop 是否启动，以及 Docker Desktop 的 WSL Integration 是否开启。
